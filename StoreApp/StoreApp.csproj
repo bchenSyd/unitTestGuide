@@ -96,10 +96,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201606220929468_InitialCreate.cs" />
-    <Compile Include="Migrations\201606220929468_InitialCreate.Designer.cs">
-      <DependentUpon>201606220929468_InitialCreate.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\IStoreAppContext.cs" />
     <Compile Include="Models\Product.cs" />
@@ -114,11 +110,6 @@
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201606220929468_InitialCreate.resx">
-      <DependentUpon>201606220929468_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

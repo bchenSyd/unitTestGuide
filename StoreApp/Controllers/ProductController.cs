@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -25,6 +26,55 @@ namespace StoreApp.Controllers
         {
             db = context;
         }
+
+        /// <summary>
+        /// in short, EF keeps track your model object and commit only changed objects to database when SaveChanges() is called;
+        /// calling SaveChanges won't reset changeTracker;
+        /// </summary>
+        [Route("api/test")]
+        public void ChangeTracker()
+        {
+            var ctx = db as StoreAppContext;
+            var prod1 = ctx.Products.Find(5);
+            Debug.WriteLine("change track count is now : "+ ctx.ChangeTracker.Entries().Count());
+
+            var category = ctx.Categories.Find(5);
+            Debug.WriteLine("change track count is now : " + ctx.ChangeTracker.Entries().Count());
+            
+            
+            category.CategoryCode = "tool-updated";
+            Debug.WriteLine("change track count is now : " + ctx.ChangeTracker.Entries().Count());
+            ctx.SaveChanges();
+            Debug.WriteLine("change track count is now : " + ctx.ChangeTracker.Entries().Count());
+
+            prod1.CategoryId = 7;
+            Debug.WriteLine("change track count is now : " + ctx.ChangeTracker.Entries().Count());
+            ctx.SaveChanges();
+
+
+            Debug.WriteLine("change track count is now : " + ctx.ChangeTracker.Entries().Count());
+            category.CategoryCode = "too-update2";
+            Debug.WriteLine("change track count is now : " + ctx.ChangeTracker.Entries().Count());
+            ctx.SaveChanges();
+
+            Debug.WriteLine("change track count is now : " + ctx.ChangeTracker.Entries().Count());
+            ctx.Products.Add(new Product
+            {
+                Name = "from code",
+                Category = new Category
+                {
+                    CategoryCode = "from Code",
+                    Id = 10
+                }
+
+            });
+            Debug.WriteLine("change track count is now : " + ctx.ChangeTracker.Entries().Count());
+
+            ctx.SaveChanges();
+            Debug.WriteLine("change track count is now : " + ctx.ChangeTracker.Entries().Count());
+        }
+
+
 
         // GET: api/Product  ===> get all products
         public IQueryable<Product> GetProducts()
