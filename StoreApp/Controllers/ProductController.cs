@@ -7,8 +7,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Xml;
 using StoreApp.Models;
 
 namespace StoreApp.Controllers
@@ -27,11 +30,25 @@ namespace StoreApp.Controllers
             db = context;
         }
 
+
+        [HttpGet]
+        [Route("test/generateEdmx")]
+        public void GenerateEdmxForCodeFirstDBContext()
+        {
+            var path = HttpContext.Current.Server.MapPath("~/Models/store.edmx");
+            using (var writer = new XmlTextWriter(path, Encoding.Default))
+            {
+                EdmxWriter.WriteEdmx(db as StoreAppContext, writer);
+            }
+
+
+        }
+
         /// <summary>
         /// in short, EF keeps track your model object and commit only changed objects to database when SaveChanges() is called;
         /// calling SaveChanges won't reset changeTracker;
         /// </summary>
-        [Route("api/test")]
+        [Route("test/changeTracker")]
         public void ChangeTracker()
         {
             var ctx = db as StoreAppContext;
